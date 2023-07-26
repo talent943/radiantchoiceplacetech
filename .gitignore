@@ -1,0 +1,12 @@
+
+# Mac/OSX
+.DS_Store
+
+# Django staff
+db.sqlite3
+
+# Environments
+.venv
+
+# Byte-compiled / optimized / DLL files
+__pycache__

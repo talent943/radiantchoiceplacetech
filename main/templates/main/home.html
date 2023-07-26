@@ -1,0 +1,40 @@
+{% extends "main/header.html" %}
+{% block content %}
+    <div class="row display-flex justify-content-start">
+        <h1>Welcome to Home Page</h1>
+    {% for object in objects %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mobiledevice">
+            <article class="media content-section customhover" style="height: 95%;">
+                <div class="media-body">
+                    <a href="/{{object.slug}}">
+                        <img class="img-fluid" src="/">
+                    </a>
+                    <div class="article-metadata">
+                        <a class="mr-2" href="{% url 'profile' username %}">{{ object.username }}</a>
+                        <small class="text-muted">{{ object.published|date:"F d, Y" }}</small>
+                    </div>
+                    <div>
+                        <a class="article-title line-clamp-2 title-style" style="font-size: 22px" href="/{{object.slug}}">
+                            {{ object.title }}
+                        </a>
+                        <a href="/{{object.slug}}" style="text-decoration: none;">
+                            <p class="article-content line-clamp-5 subtitle-style">{{ object.subtitle }}</p>
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% if user.is_authenticated %}
+            <div style="float: right">
+                {% if type == "courses" %}
+                    <a class="btn btncolor btn-sm mt-1 mb-1" href="{% url 'course_update' %}">Update</a>
+                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'course_delete' %}">Delete</a>                   
+                {% else %}
+                    <a class="btn btncolor btn-sm mt-1 mb-1" href="{% url 'student_update' %}">Update</a>
+                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'student_delete' %}">Delete</a>                      
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock content %}
