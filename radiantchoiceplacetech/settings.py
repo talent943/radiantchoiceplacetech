@@ -18,16 +18,19 @@ import requests, os
 import certifi 
 # import urlopen 
 import urllib
+from environ import Env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = Env()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%g1r08nuszaspvom&s259s(y&pxumwev2m)vw50f_-c+%&v1=e'
+SECRET_KEY = 'MY_SCRET_KEY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -50,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_bootstrap4',
     'six',
-    # 'Contact',
 ]
 
 MIDDLEWARE = [
@@ -157,21 +159,12 @@ AUTHENTICATION_BACKENDS = ['users.backends.EmailBackend']
 
 
 # Emailing settings
-""" EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FROM = 'talentpachena40gmail.com'
-EMAIL_HOST_USER = 'talentpachena40@gmail.com'
-EMAIL_HOST_PASSWORD = 'reuesemiosxjodvw'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-PASSWORD_RESET_TIMEOUT = 14400 """
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND  
-EMAIL_HOST = 'smtp.gmail.com'  
-EMAIL_HOST_PASSWORD = 'reuesemiosxjodvw'  
-EMAIL_HOST_USER = 'talentpachena40@gmail.com'  
-EMAIL_PORT = 465  
-EMAIL_USE_SSL = True  
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST = "EMAIL_HOST"
+EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD"
+EMAIL_HOST_USER = "EMAIL_HOST_USER"  
+EMAIL_PORT = "EMAIL_PORT "
+EMAIL_USE_SSL = "EMAIL_USE_SSL"
+DEFAULT_FROM_EMAIL = "EMAIL_HOST_USER"

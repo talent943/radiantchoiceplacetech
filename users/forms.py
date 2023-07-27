@@ -42,8 +42,12 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    description = forms.CharField(widget=forms.Textarea, required=True)
 
     class Meta:
         model = get_user_model()
         fields = ['first_name', 'last_name', 'email', 'image', 'description']
+

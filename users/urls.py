@@ -1,6 +1,8 @@
 from django.urls import include, re_path as url
 from . import views
 
+app_name = 'users'
+
 urlpatterns = [
     url('signup', views.signup, name='signup'),
     # url('register', views.register, name='register'),

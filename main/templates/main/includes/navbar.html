@@ -23,11 +23,14 @@
                 <div class="navbar-nav mr-auto">
                     <a class="nav-item nav-link" href="{% url 'main:contact' %}" style="color: #f2b80a;">Contact</a>
                 </div>
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{% url 'users:profile' %}" style="color: #f2b80a;">User Profile</a>
+                </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                     <!-- django_project/main/templates/main/includes/navbar.html -->
                     {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{% url 'profile' user.username %}" style="color: #f2b80a;">
+                    <a class="nav-item nav-link" href="{% url 'users:profile' %}" style="color: #f2b80a;">
                         {{user.username}} <i class="fas fa-user"></i>
                     </a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}" style="color: #f2b80a;">
@@ -37,7 +40,7 @@
                     <a class="nav-item nav-link" href="{% url 'login' %}" style="color: #f2b80a;">
                         Log in <i class="fas fa-sign-in-alt"></i>
                     </a>
-                    <a class="nav-item nav-link" href="{% url 'signup' %}" style="color: #f2b80a;">
+                    <a class="nav-item nav-link" href="{% url 'users:signup' %}" style="color: #f2b80a;">
                         Sign up <i class="fas fa-user-plus"></i>
                     </a>
                     {% endif %}
