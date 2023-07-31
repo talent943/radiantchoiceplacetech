@@ -18,8 +18,10 @@
                 Need An Account? <a class="ml-2" href="{% url 'users:signup' %}">Sign Up Now</a>
             </small><br>
             <small class="text-muted">
-                <a href="main/home">Forgot password?</a>
+                <!-- <a href="main/home">Forgot password?</a> -->
+                <p><a href="{% url 'users:password_reset' %}">Lost password?</a></p>
             </small>
         </div>
+        
     </div>
 {% endblock content %}

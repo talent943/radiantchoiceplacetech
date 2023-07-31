@@ -32,3 +32,8 @@
     text-decoration: none;
     background-color: transparent;
 }
+
+.btn-outline-light {
+  color: #030303;
+  border-color: #030303;
+}

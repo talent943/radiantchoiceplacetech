@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import django
+from django.utils.encoding import force_str
 import os
 from pathlib import Path
 from django.conf.urls.static import static
@@ -19,7 +21,47 @@ import certifi
 # import urlopen 
 import urllib
 from environ import Env
+import socket
+# host = socket.gethostbyname(socket.gethostname())
 
+# socket.gethostbyname("")
+def ServerProgram():
+    host = socket.gethostname()
+    port = 8000
+    ServerSocket = socket.socket()
+    ServerSocket.bind((host, port))
+    ServerSocket.listen(2)
+    conn, ClientAddress = ServerSocket.accept()
+    print("Connection from: " + str(ClientAddress))
+    while True:
+        ClientMsg = conn.recv(1024).decode()
+        if not ClientMsg:
+            break
+        print("from connected user: " + str(ClientMsg))
+        ClientMsg = input(' -> ')
+        conn.send(ClientMsg.encode())
+    conn.close()
+if __name__ == '__main__':
+    ServerProgram()
+
+
+def ClientProgram():
+    host = socket.gethostname()
+    port = 8000 ## We fixed here.
+    ClientSocket = socket.socket()
+    ClientSocket.connect((host, port))
+    ClientMessage = input(" -> ")
+    while ClientMessage.lower().strip() != 'bye':
+        ClientSocket.send(ClientMessage.encode())
+        ServerMsg = ClientSocket.recv(1024).decode()
+        print('Received from server: ' + ServerMsg)
+        ClientMessage = input(" -> ")
+    ClientSocket.close()
+if __name__ == '__main__':
+    ClientProgram()
+
+
+django.utils.encoding.force_text = force_str
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -53,7 +95,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_bootstrap4',
     'six',
+    'django_email_verification',
 ]
+
+def verified_callback(user):
+    user.is_active = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -145,7 +191,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "dashboard"
 
-LOGOUT_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "/users/login/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -160,11 +206,38 @@ AUTHENTICATION_BACKENDS = ['users.backends.EmailBackend']
 
 # Emailing settings
 
+"""
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND  
 EMAIL_HOST = "EMAIL_HOST"
-EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD"
+# EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD" 
+EMAIL_HOST_PASSWORD = 'toghlfenpvabmjzj'
 EMAIL_HOST_USER = "EMAIL_HOST_USER"  
 EMAIL_PORT = "EMAIL_PORT "
-EMAIL_USE_SSL = "EMAIL_USE_SSL"
+# EMAIL_USE_SSL = "EMAIL_USE_SSL"
 DEFAULT_FROM_EMAIL = "EMAIL_HOST_USER"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False 
+"""
+
+EMAIL_VERIFIED_CALLBACK = verified_callback
+EMAIL_FROM_ADDRESS = 'talentpachena40@gmail.com'
+EMAIL_MAIL_SUBJECT = 'Confirm your email {{ user.username }}'
+EMAIL_MAIL_HTML = 'users/mail_body.html'
+EMAIL_MAIL_PLAIN = 'users/mail_body.txt'
+EMAIL_MAIL_TOKEN_LIFE = 60 * 60
+EMAIL_MAIL_PAGE_TEMPLATE = 'users/confirm_template.html'
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/' # Host
+# EMAIL_MULTI_USER = True  # optional (defaults to False)
+
+# For Django Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'talentpachena40@gmail.com'
+EMAIL_HOST_PASSWORD = 'psdnfndwaedafuqk'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'talentpachena40@gmail.com'
+SERVER_EMAIL = 'talentpachena40@gmail.com'
+
+

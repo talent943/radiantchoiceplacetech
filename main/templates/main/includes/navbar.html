@@ -33,15 +33,18 @@
                     <a class="nav-item nav-link" href="{% url 'users:profile' %}" style="color: #f2b80a;">
                         {{user.username}} <i class="fas fa-user"></i>
                     </a>
-                    <a class="nav-item nav-link" href="{% url 'logout' %}" style="color: #f2b80a;">
+                    <a class="nav-item nav-link" href="{% url 'users:logout' %}" style="color: #f2b80a;">
                         Log out <i class="fas fa-sign-out-alt"></i>
                     </a>
                     {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}" style="color: #f2b80a;">
+                    <a class="nav-item nav-link" href="{% url 'users:login' %}" style="color: #f2b80a;">
                         Log in <i class="fas fa-sign-in-alt"></i>
                     </a>
                     <a class="nav-item nav-link" href="{% url 'users:signup' %}" style="color: #f2b80a;">
                         Sign up <i class="fas fa-user-plus"></i>
+                    </a>
+                    <a class="nav-item nav-link" href="{% url 'users:register' %}" style="color: #f2b80a;">
+                        Register <i class="fas fa-user-plus"></i>
                     </a>
                     {% endif %}
                 </div>

@@ -8,6 +8,7 @@ from .decorators import user_not_authenticated
 from .forms import UserRegistrationForm, UserLoginForm, SignupForm
 from django.contrib.auth import login, logout, authenticate
 from .forms import UserUpdateForm
+from django.urls import reverse_lazy, reverse
 # email authentication libraries
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -16,25 +17,77 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from .tokens import account_activation_token
 from django.http import HttpResponse
+from django.views.generic import View, UpdateView
+import smtplib
+from django.conf import settings
+import socket
+from .tokens import account_activation_token
+from django_email_verification import send_email
+from django.http import HttpResponseRedirect
+
+# host = socket.gethostname()
+# print("HOST NAME IS:{}".format(host))
+"""
+s = socket.socket()
+host = socket.gethostbyname('smtp.gmail.com')
+print("HOST NAME IS:{}".format(host))
+# host = '127.0.0.1'
+port = 587
+
+s.connect(('smtp.gmail.com', 587))
+print(s.recv(1024))
+s.close
+"""
+
 
 
 User = get_user_model()
-# Create your views here.
+
+server = smtplib.SMTP()
+
+
+@user_not_authenticated
+def register_user(request):
+    form = UserRegistrationForm()
+
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+
+        if form.is_valid():
+            form.save(commit=False)
+            user_email = form.cleaned_data['email']
+            user_username = form.cleaned_data['username']
+            user_password = form.cleaned_data['password1']
+
+            # Create new user
+            user = User.objects.create_user(username=user_username, email=user_email, password=user_password)
+
+            # Make user unactive until they click link to token in email
+            user.is_active = False 
+            send_email(user)
+
+            return HttpResponseRedirect(reverse('users/login'))
+
+    return render(request, 'users/register.html', {'form':form})
+ 
+
+
+# Sign Up View
 @user_not_authenticated
 def signup(request):  
     if request.method == 'POST':  
         form = SignupForm(request.POST)  
         if form.is_valid():  
-            # save form in the memory not in database  
+            # the form has to be saved in the memory and not in DB
             user = form.save(commit=False)  
             user.is_active = False  
             user.save()  
-            # to get the domain of the current site  
-            current_site = get_current_site(request)  
-            mail_subject = 'Activation link has been sent to your email id'  
-            message = render_to_string('template_activate_account.html', {  
+            #This is  to obtain the current cite domain   
+            current_site_info = get_current_site(request)  
+            mail_subject = 'The Activation link has been sent to your email address'  
+            message = render_to_string('users/acc_active_email.html', {  
                 'user': user,  
-                'domain': current_site.domain,  
+                'domain': current_site_info.domain,  
                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),  
                 'token':account_activation_token.make_token(user),  
             })  
@@ -43,21 +96,22 @@ def signup(request):
                         mail_subject, message, to=[to_email]  
             )  
             email.send()  
-            return HttpResponse('Please confirm your email address to complete the registration')  
+            return HttpResponse('Please proceed confirm your email address to complete the registration')  
     else:  
         form = SignupForm()  
-    return render(request, 'users/signup.html', {'form': form})  
+    return render(request, 'users/signup.html', {'form': form})
+
 
 @login_required
 def custom_logout(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect("main/home")
+    return redirect("main/home.html")
 
 @user_not_authenticated
 def custom_login(request):
     if request.user.is_authenticated:
-        return redirect('main/home')
+        return redirect('main/home.html')
 
     if request.method == 'POST':
         form = UserLoginForm(request=request, data=request.POST)
@@ -69,7 +123,7 @@ def custom_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Hello <b>{user.username}</b>! You have been logged in")
-                return redirect('main/home')
+                return redirect('main/home.html')
 
         else:
             for error in list(form.errors.values()):
@@ -83,32 +137,7 @@ def custom_login(request):
         context={'form': form}
         )
 
-"""
-def profile(request, username):
-    if request.method == 'POST':
-        user = request.user
-        username = user.username
-        form = UserUpdateForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            user_form = form.save()
 
-            messages.success(request, f'{user_form}, Your profile has been updated!')
-            return redirect('users/profile', user_form.username)
-
-        for error in list(form.errors.values()):
-            messages.error(request, error)
-
-    username = user.username
-    user = get_user_model().objects.filter(username=username).first()
-
-    if user:
-        form = UserUpdateForm(instance=user)
-        form.fields['description'].widget.attrs = {'rows': 1}
-        username = user.username
-        return render(request, 'users/profile.html', context={'form': form, 'username': username})
-
-    return redirect("main/home")
-    """
 @login_required
 def profile(request):
     return render(request, 'users/profile.html')
@@ -146,7 +175,7 @@ def activate(request, uidb64, token):
         user.save()
 
         messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
-        return redirect('login')
+        return redirect('users/login')
     else:
         messages.error(request, 'Activation link is invalid!')
     
