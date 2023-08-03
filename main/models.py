@@ -41,6 +41,7 @@ class Courses(models.Model):
         return self.title
 
 
+"""
 class Student(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200, default='', blank=True)
@@ -56,6 +57,7 @@ class Student(models.Model):
 
     def __str__(self):
         return self.email_address
+"""
 
 
 class Contact(models.Model):
@@ -78,6 +80,7 @@ class Contact(models.Model):
         return self.email
 
 
+
 class Tutor(models.Model):
     # user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, on_delete=models.CASCADE,primary_key=True,related_name='Tutor')
     username = models.CharField(max_length=250)
@@ -91,4 +94,5 @@ class Tutor(models.Model):
 
     def __str__(self):
         return self.name
+
 

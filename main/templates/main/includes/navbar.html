@@ -1,9 +1,15 @@
 <header class="site-header" style="margin-bottom: 5px">
-    <nav class="navbar navbar-expand-md navbar-color text-bg-warning p-3" style="color: #f2b80a;">
-        <div class="container">
+    <nav class="navbar navbar-expand-md navbar-color text-bg-warning p-3 bg-dark" style="color: #f2b80a;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'users:home' %">
+                <img src="/static/image/logo.png" class="me-2" height="110"
+                  alt="MDB Logo" loading="lazy" />
+                <small></small>
+              </a>
+          
             <!-- Navbar Left Side -->
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{% url 'main:home' %}" style="color: #f2b80a;">Home</a>
+                <a class="nav-item nav-link" href="{% url 'users:home' %}" style="color: #f2b80a;">Home</a>
             </div>
             <button aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation"
                     class="navbar-toggler ml-auto float-right btncolor" data-target="#navbarToggle" data-toggle="collapse" type="button">
@@ -12,16 +18,16 @@
             <div class="collapse navbar-collapse dark" id="navbarToggle">
                 <!-- Navbar Left Side -->
                 <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'main:course' %}" style="color: #f2b80a;">Courses</a>
+                    <a class="nav-item nav-link" href="{% url 'users:course' %}" style="color: #f2b80a;">Courses</a>
+                </div>                
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{% url 'users:student' %}" style="color: #f2b80a;">Student</a>
                 </div>
                 <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'main:student' %}" style="color: #f2b80a;">Student</a>
+                    <a class="nav-item nav-link" href="{% url 'users:about' %}" style="color: #f2b80a;">About</a>
                 </div>
                 <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'main:about' %}" style="color: #f2b80a;">About</a>
-                </div>
-                <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'main:contact' %}" style="color: #f2b80a;">Contact</a>
+                    <a class="nav-item nav-link" href="{% url 'users:contact' %}" style="color: #f2b80a;">Contact</a>
                 </div>
                 <div class="navbar-nav mr-auto">
                     <a class="nav-item nav-link" href="{% url 'users:profile' %}" style="color: #f2b80a;">User Profile</a>

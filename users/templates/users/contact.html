@@ -1,0 +1,18 @@
+{% extends "main/header.html" %}
+{% block content %}
+<div class="row media content-section mobiledevice">
+    <div style="margin:80px">
+        <h1 align="center">Contact Us</h1>
+        <hr>
+        <h4>Contact us directly if you have any queries. We will get in touch with you shortly.</h4>
+        <hr>
+        <br>
+        <form method="post" action="" enctype="multipart/form-data" class="post-form">
+            {% csrf_token %}
+            <table>
+                {{form.as_table}}
+            </table>
+            <button type="submit" class="save btn btn-default">Submit</button>
+        </form>
+    </div>
+{% endblock content %}

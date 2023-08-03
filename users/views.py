@@ -24,6 +24,9 @@ import socket
 from .tokens import account_activation_token
 from django_email_verification import send_email
 from django.http import HttpResponseRedirect
+from users.models import Student, Course
+from .forms import CoursesCreateForm, CoursesUpdateForm, ContactForm
+from django.core.mail import BadHeaderError, send_mail
 
 # host = socket.gethostname()
 # print("HOST NAME IS:{}".format(host))
@@ -106,12 +109,12 @@ def signup(request):
 def custom_logout(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect("main/home.html")
+    return redirect("uses/home.html")
 
 @user_not_authenticated
 def custom_login(request):
     if request.user.is_authenticated:
-        return redirect('main/home.html')
+        return redirect('users/home.html')
 
     if request.method == 'POST':
         form = UserLoginForm(request=request, data=request.POST)
@@ -123,7 +126,7 @@ def custom_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Hello <b>{user.username}</b>! You have been logged in")
-                return redirect('main/home.html')
+                return redirect('users/home.html')
 
         else:
             for error in list(form.errors.values()):
@@ -180,3 +183,70 @@ def activate(request, uidb64, token):
         messages.error(request, 'Activation link is invalid!')
     
     return redirect('main/home')
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid(): 
+            form.save()
+            subject = request.POST.get("subject", "Welcome to Radiant Choice PlaceTech")
+            message = request.POST.get("message", "Our team will contact you within 24hrs.")
+            from_email = settings.EMAIL_HOST_USER
+            email = form.cleaned_data['email']
+            recipient_list = email
+            send_mail(subject, message, from_email, [recipient_list])
+            return render(request, 'users/success.html') 
+    form = ContactForm()
+    context = {'form': form}
+    return render(request, 'users/contact.html', context)
+
+def success(request):
+    return render(request, 'users/success.html')
+
+
+def about(request):
+    return render(request, 'users/about.html')
+
+
+def course(request):
+    course_list = Course.objects.all()
+    context = {
+        course_list : course_list
+    }
+    return render(request, 'users/course.html', context)
+
+def student(request):
+    user = request.user
+    students = Student.objects.filter(id=user.id).all()
+
+    context = {
+            "objects": students,
+            "type": "student"
+            }
+    return render(request, 'users/student.html', context)
+
+def home(request):
+    courses = Course.objects.all()
+    
+    context = {
+            "objects": courses,
+            "type": "courses"
+        }
+    return render(request, 'users/home.html', context)
+
+
+def icdl_student(request):
+    return render(request, 'users/icdl_student.html')
+
+
+def icdl_professional(request):
+    return render(request, 'users/icdl_professional.html')
+
+
+def icdl_digital_citizen(request):
+    return render(request, 'users/icdl_digital_citizen.html')
+
+
+def icdl_workforce(request):
+    return render(request, 'users/icdl_workforce.html')

@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Courses, Student
+from .models import Courses
 from .decorators import user_is_superuser
-from .forms import CoursesCreateForm, StudentCreateForm, CoursesUpdateForm, \
-                    StudentUpdateForm, ContactForm
+from .forms import CoursesCreateForm, CoursesUpdateForm, ContactForm
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
 

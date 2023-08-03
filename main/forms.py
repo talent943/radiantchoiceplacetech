@@ -1,5 +1,5 @@
 from django import forms
-from .models import Student, Courses, Contact
+from .models import Courses, Contact
 
 CONTACT_CHOICES = (
     ("email", "E-Mail"),
@@ -30,6 +30,7 @@ class CoursesCreateForm(forms.ModelForm):
     tutor = forms.CharField(max_length = 20)
     
 
+"""
 class StudentCreateForm(forms.ModelForm):
     class Meta:
         model = Student
@@ -51,6 +52,7 @@ class StudentCreateForm(forms.ModelForm):
         queryset=Courses.objects.all(),
         widget=forms.CheckboxSelectMultiple
     )
+"""
 
 class CoursesUpdateForm(forms.ModelForm):
     class Meta:
@@ -69,6 +71,7 @@ class CoursesUpdateForm(forms.ModelForm):
     tutor = forms.CharField(max_length = 20)
 
 
+"""
 class StudentUpdateForm(forms.ModelForm):
     class Meta:
         model = Student
@@ -90,7 +93,7 @@ class StudentUpdateForm(forms.ModelForm):
         queryset=Courses.objects.all(),
         widget=forms.CheckboxSelectMultiple
     )
-
+"""
 
 
 class ContactForm(forms.ModelForm):
